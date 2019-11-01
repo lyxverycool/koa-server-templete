@@ -7,7 +7,7 @@ class Crawler {
   // 爬取腾讯微博
   async getQQWeibo(ctx) {
     try {
-      const htmlMsg = await superagent.get('http://t.qq.com/LYX117888/mine')
+      const htmlMsg = await superagent.get('http://t.qq.com/*')
       const $ = cheerio.load(htmlMsg.text)
       let items = []
       $('.msgCnt').each(function (index, ele) {
@@ -37,7 +37,7 @@ class Crawler {
         let allData = []
         for (var i = 1; i <= 8; i++) {
           const htmlMsg = await superagent.get(
-            'https://www.cnblogs.com/lyxverycool/default.html?page=' + i
+            'https://www.cnblogs.com/*/default.html?page=' + i
           )
           const $ = cheerio.load(htmlMsg.text)
           let items = []
