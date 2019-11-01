@@ -10,7 +10,7 @@
     "build:prd": "cross-env NODE_ENV=production npm run build",
     "start:dev": "cross-env NODE_ENV=development pm2 start build/server.js",
     "start:prd": "cross-env NODE_ENV=production pm2 start build/server.js",
-    "start": "cross-env NODE_ENV=development pm2 start src/server.js",
+    "start": "npm run dev",
     "dev": "cross-env NODE_ENV=development ./node_modules/.bin/nodemon src/server.js --exec babel-node",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
