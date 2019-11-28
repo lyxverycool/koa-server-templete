@@ -10,7 +10,7 @@ import Logger from './utils/logger'
 // import db from './db/mongo'
 // error handler
 onerror(app)
-global.logger = Logger(process.env.LOG_DIR)
+global.logger = Logger(process.env.LOG_DIR, process.env.NODE_ENV == 'development')
 
 // middlewares
 app.use(cors())

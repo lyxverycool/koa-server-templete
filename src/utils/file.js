@@ -2,17 +2,29 @@ import fs from 'fs'
 import superagent from 'superagent'
 
 class File {
-  writeFile (filename, data) {
+  mkdir(dirname) {
+    return new Promise((resolve, reject) => {
+      if (fs.existsSync(dirname)) {
+        reject('文件夹已经存在')
+      } else {
+        fs.mkdirSync(dirname)
+        resolve(console.log(`${dirname}文件夹已建立`))
+      }
+    })
+  }
+
+  writeFile(filename, data) {
     return new Promise((resolve, reject) => {
       fs.writeFile(filename, data, (err, data) => {
         if (err) {
           reject(err)
         }
-        resolve(console.log('写入完成'))
+        resolve(console.log(`写入完成 ---- ${filename}`))
       })
     })
   }
-  readFile (path) {
+
+  readFile(path) {
     return new Promise((resolve, reject) => {
       fs.readFile(path, (err, data) => {
         if (err) {
@@ -23,7 +35,7 @@ class File {
       })
     })
   }
-  downLoadImgs (imgs) {
+  downLoadImgs(imgs) {
     return new Promise((resovle, reject) => {
       imgs.forEach((imgUrl, index) => {
         // 获取图片名

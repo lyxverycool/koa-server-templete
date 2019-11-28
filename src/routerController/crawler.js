@@ -1,6 +1,7 @@
 import superagent from 'superagent'
 import cheerio from 'cheerio'
 import File from '../utils/file'
+import Logger from '../utils/logger'
 
 class Crawler {
   constructor() { }
@@ -73,6 +74,78 @@ class Crawler {
       ctx.body = {
         status: '0',
         type: 'error_get_cnblogs',
+        message: err.toString()
+      }
+    }
+  }
+
+  //爬去指定作者的诗集
+  async getPoetys(ctx) {
+    let { author } = ctx.request.query
+    author = encodeURIComponent(author)
+    try {
+      //获取page
+      async function getPoetyPage() {
+        const htmlMsg = await superagent.get(
+          `https://so.gushiwen.org/search.aspx?type=author&page=1&value=${author}`
+        )
+        const $ = cheerio.load(htmlMsg.text)
+        const poetyContent = $('.pagesright span').text().replace(/[^0-9]/ig, "")
+        if (poetyContent && poetyContent >= 1) {
+          poetyContent
+        }
+        await File.mkdir(decodeURIComponent(author))
+        return poetyContent
+      }
+
+      //获取所有内容
+      const page = await getPoetyPage()
+      async function forEachPeoty() {
+        let allData = []
+        for (var i = 1; i <= page; i++) {
+          const htmlMsg = await superagent.get(
+            `https://so.gushiwen.org/search.aspx?type=author&page=${i}&value=${author}`
+          )
+          const $ = cheerio.load(htmlMsg.text)
+          $('.cont').each(function (index, ele) {
+            const poetyTitle = $(ele)
+              .find('b')
+              .text()
+            const poetyContent = $(ele)
+              .find('.contson')
+              .text()
+            const title = poetyTitle.replace(/[\r\n]/g, "").replace('/', '')
+            if (poetyContent) {
+              allData.push({
+                poetyTitle: title,
+                poetyContent: poetyContent
+              })
+            }
+            logger.info('正在抓取...' + title)
+          })
+        }
+        return allData
+      }
+
+      const Datas = await forEachPeoty()
+
+      logger.info('开始写入')
+      for (var i = 0; i < Datas.length; i++) {
+        const poetyTitle = Datas[i].poetyTitle
+        const poetyContent = Datas[i].poetyContent
+        await File.writeFile(`${decodeURIComponent(author)}/${poetyTitle}.txt`, poetyContent)
+      }
+
+      ctx.body = {
+        status: '1',
+        type: 'success_get_poetys',
+        message: 'success',
+        data: 'ok'
+      }
+    } catch (err) {
+      ctx.body = {
+        status: '0',
+        type: 'error_get_poetys',
         message: err.toString()
       }
     }
