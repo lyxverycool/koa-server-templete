@@ -8,7 +8,7 @@ const router = new Router({
   prefix: `/${API_PATH}/admin`
 })
 
-router.get('/login', Admin.VerifyPsd)
-router.get('/getInfo', Admin.GetInfo)
+router.post('/login', Admin.Login)
+router.post('/register', Admin.Register)
 
 export default router

@@ -10,6 +10,7 @@ import routers from './routers/index'
 import Logger from './utils/logger'
 import connectMongo from './db/mongo'
 import errorJwt from './utils/errorJwt'
+import sendMiddleware from './utils/sendMiddleware'
 
 // error handler
 onerror(app)
@@ -23,6 +24,7 @@ connectMongo(app)
 // middlewares
 app.use(errorJwt)
 app.use(cors())
+app.use(sendMiddleware())
 app.use(bodyparser({
   enableTypes: ['json', 'form', 'text']
 }))
@@ -34,7 +36,7 @@ app.use(views(__dirname + '/views', {
   extension: 'pug'
 }))
 
-app.use(jwtKoa({ secret: 'secret' }).unless({ path: ['/', /^\/api\/crawler/, /^\/api\/admin\/login/] }))
+app.use(jwtKoa({ secret: 'secret' }).unless({ path: ['/', /^\/api\/crawler/, /^\/api\/admin/] }))
 
 // apiTime
 app.use(async (ctx, next) => {

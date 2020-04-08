@@ -3,33 +3,6 @@ import cheerio from 'cheerio'
 import File from '../utils/file'
 
 class Crawler {
-  constructor() { }
-  // 爬取腾讯微博
-  async getQQWeibo(ctx) {
-    try {
-      const htmlMsg = await superagent.get('http://t.qq.com/*')
-      const $ = cheerio.load(htmlMsg.text)
-      let items = []
-      $('.msgCnt').each(function (index, ele) {
-        const msgCnt = $(ele).text()
-        items.push({
-          text: msgCnt
-        })
-      })
-      ctx.body = {
-        status: '1',
-        type: 'success_get_cnblogs',
-        message: 'success',
-        data: items
-      }
-    } catch (err) {
-      ctx.body = {
-        status: '0',
-        type: 'error_get_qqweibo',
-        message: err.toString()
-      }
-    }
-  }
   // 爬取博客园文章所有标题
   async getCnblogs(ctx) {
     try {
@@ -37,7 +10,7 @@ class Crawler {
         let allData = []
         for (var i = 1; i <= 8; i++) {
           const htmlMsg = await superagent.get(
-            'https://www.cnblogs.com/*/default.html?page=' + i
+            'https://www.cnblogs.com/ihardcoder/default.html?page=' + i
           )
           const $ = cheerio.load(htmlMsg.text)
           let items = []
@@ -63,18 +36,9 @@ class Crawler {
         return allData
       }
       const Datas = await forEachCrawler()
-      ctx.body = {
-        status: '1',
-        type: 'success_get_cnblogs',
-        message: 'success',
-        data: Datas
-      }
+      ctx.send(Datas)
     } catch (err) {
-      ctx.body = {
-        status: '0',
-        type: 'error_get_cnblogs',
-        message: err.toString()
-      }
+      ctx.sendError(err.toString())
     }
   }
 
@@ -134,19 +98,9 @@ class Crawler {
         const poetyContent = Datas[i].poetyContent
         await File.writeFile(`${decodeURIComponent(author)}/${poetyTitle}.txt`, poetyContent)
       }
-
-      ctx.body = {
-        status: '1',
-        type: 'success_get_poetys',
-        message: 'success',
-        data: 'ok'
-      }
+      ctx.send('ok')
     } catch (err) {
-      ctx.body = {
-        status: '0',
-        type: 'error_get_poetys',
-        message: err.toString()
-      }
+      ctx.sendError(err.toString())
     }
   }
 
@@ -161,17 +115,9 @@ class Crawler {
         items.push(element.attr('src'))
       })
       const msg = await File.downLoadImgs(items)
-      ctx.body = {
-        status: '1',
-        type: 'success_get_zhihuimgs',
-        message: msg
-      }
+      ctx.send('ok', msg)
     } catch (err) {
-      ctx.body = {
-        status: '0',
-        type: 'error_get_zhihuimgs',
-        message: err.message
-      }
+      ctx.sendError(err.toString())
     }
   }
 }

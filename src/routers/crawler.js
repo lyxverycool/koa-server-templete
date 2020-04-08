@@ -7,7 +7,6 @@ const router = new Router({
   prefix: `/${API_PATH}/crawler`
 })
 
-router.get('/getQQWeibo', Crawler.getQQWeibo)
 router.get('/getCnblogs', Crawler.getCnblogs)
 router.get('/getZhihuImgs', Crawler.getZhihuImgs)
 router.get('/getPoetys', Crawler.getPoetys)
