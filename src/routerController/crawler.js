@@ -1,7 +1,6 @@
 import superagent from 'superagent'
 import cheerio from 'cheerio'
 import File from '../utils/file'
-import Logger from '../utils/logger'
 
 class Crawler {
   constructor() { }

@@ -4,15 +4,24 @@ const views = require('koa-views')
 const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
+const jwtKoa = require('koa-jwt');
 import cors from './utils/corsMiddleware'
 import routers from './routers/index'
 import Logger from './utils/logger'
-// import db from './db/mongo'
+import connectMongo from './db/mongo'
+import errorJwt from './utils/errorJwt'
+
 // error handler
 onerror(app)
+
+//logger
 global.logger = Logger(process.env.LOG_DIR, process.env.NODE_ENV == 'development')
 
+//连接mongo
+connectMongo(app)
+
 // middlewares
+app.use(errorJwt)
 app.use(cors())
 app.use(bodyparser({
   enableTypes: ['json', 'form', 'text']
@@ -25,7 +34,9 @@ app.use(views(__dirname + '/views', {
   extension: 'pug'
 }))
 
-// logger
+app.use(jwtKoa({ secret: 'secret' }).unless({ path: ['/', /^\/api\/crawler/, /^\/api\/admin\/login/] }))
+
+// apiTime
 app.use(async (ctx, next) => {
   const start = new Date()
   await next()

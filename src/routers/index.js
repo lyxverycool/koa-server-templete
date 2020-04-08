@@ -1,9 +1,9 @@
 import crawler from './crawler'
 import homepage from './homepage'
-import test from './test'
+import admin from './admin'
 
 export default app => {
   app.use(homepage.routes()).use(homepage.allowedMethods())
   app.use(crawler.routes()).use(crawler.allowedMethods())
-  app.use(test.routes()).use(test.allowedMethods())
+  app.use(admin.routes()).use(admin.allowedMethods())
 }
