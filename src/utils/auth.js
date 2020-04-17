@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken")
-const expiresIn = "7d"
+const expiresIn = "2 days"
 const tokenName = 'lyxTooken'
 const secret = 'secret'
 
