@@ -4,7 +4,7 @@ const views = require('koa-views')
 const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
-const { historyApiFallback }  = require('koa2-connect-history-api-fallback');
+const { historyApiFallback } = require('koa2-connect-history-api-fallback');
 const jwtKoa = require('koa-jwt');
 import cors from './utils/corsMiddleware'
 import routers from './routers/index'
@@ -12,7 +12,6 @@ import Logger from './utils/logger'
 import connectMongo from './db/mongo'
 import errorJwt from './utils/errorJwt'
 import sendMiddleware from './utils/sendMiddleware'
-import spaStatic from './utils/koa-spa-static'
 // error handler
 onerror(app)
 
@@ -32,7 +31,7 @@ app.use(bodyparser({
 app.use(json())
 
 
-app.use(historyApiFallback({whiteList: ['/api'] }))
+app.use(historyApiFallback({ whiteList: ['/api'] }))
 app.use(require('koa-static')(__dirname + '/public'))
 
 app.use(views(__dirname + '/views', {
