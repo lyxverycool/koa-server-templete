@@ -42,7 +42,7 @@
     "koa-views": "^5.2.1",
     "koa2-connect-history-api-fallback": "^0.1.2",
     "log4js": "^4.1.0",
-    "mongodb": "^2.2.25",
+    "mongodb": "^3.6.1",
     "mongoose": "^4.9.3",
     "pug": "^2.0.0-rc.1",
     "rimraf": "^2.6.3",
